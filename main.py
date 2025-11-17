@@ -14,7 +14,7 @@ conn = mysql.connector.connect(
     database="face_attendance"
 )
 cursor = conn.cursor(dictionary=True)
-print("✅ Connected to MySQL Database!")
+print(" Connected to MySQL Database!")
 
 # ------------------------
 # Step 2: Load Student Data
@@ -34,9 +34,9 @@ for student in students:
         classNames.append(student["name"].upper())
         studentIDs.append(student["student_id"])
     else:
-        print(f"⚠️ Could not read image for {student['name']} at {path}")
+        print(f" Could not read image for {student['name']} at {path}")
 
-print("Face Recognition OK ✅")
+print("Face Recognition OK ")
 print(f"Loaded {len(classNames)} students.")
 
 # ------------------------
@@ -52,7 +52,7 @@ def findEncodings(images):
     return encodeList
 
 encodeListKnown = findEncodings(images)
-print("Encoding Complete ✅")
+print("Encoding Complete ")
 
 # ------------------------
 # Step 4: Mark Attendance & Log Entries
@@ -75,7 +75,7 @@ def markAttendance(student_id, name):
                 WHERE student_id = %s AND date = %s
             """, ('P', time_str, student_id, date_str))
             conn.commit()
-            print(f"✅ {name} marked Present at {time_str}")
+            print(f"{name} marked Present at {time_str}")
         else:
             # Update only latest out_time (not every second)
             cursor.execute("""
@@ -84,7 +84,7 @@ def markAttendance(student_id, name):
                 WHERE student_id = %s AND date = %s
             """, (time_str, student_id, date_str))
             conn.commit()
-            print(f"🔁 {name} Out Time updated to {time_str}")
+            print(f"{name} Out Time updated to {time_str}")
     else:
         # Create new record if none exists
         cursor.execute("""
@@ -92,7 +92,7 @@ def markAttendance(student_id, name):
             VALUES (%s, %s, %s, %s)
         """, (student_id, date_str, 'P', time_str))
         conn.commit()
-        print(f"🆕 Added {name} as Present at {time_str}")
+        print(f" Added {name} as Present at {time_str}")
 
     # Step 4.2 — Add tracking log (for all detections)
     cursor.execute("""
@@ -160,4 +160,4 @@ while True:
 cap.release()
 cv2.destroyAllWindows()
 conn.close()
-print("👋 Attendance System Closed.")
+print("Attendance System Closed.")
